@@ -504,7 +504,7 @@ export const CreateclassStyle = styled.div`
         }
 
         .file-upload input {
-            display: none;
+            
         }
 
         .upload-icon {

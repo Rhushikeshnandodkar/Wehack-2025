@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { url } from "../../components/common/api";
-import axios from "axios"
+import axios from "axios";
 
 export const fetchClasses = createAsyncThunk("classes/fetchall", async(data, thunkAPI) =>{
     try{
@@ -17,7 +17,36 @@ export const fetchClasses = createAsyncThunk("classes/fetchall", async(data, thu
     }catch(err){
         return thunkAPI.rejectWithValue(err)
     }
-})
+});
+
+export const createClasses = createAsyncThunk("classes/create", async (data, thunkAPI) => {
+    try {
+        console.log(data);
+        
+        const res = await fetch(`${url}/api/room/`, {
+            method: "POST",
+            headers : {
+                // "Content-Type" : "application/json",
+                Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+                // Accept: "application/json",
+            }  ,
+            body: data,
+        });
+        
+        if (!res.ok) {
+            throw new Error("Failed to create class");
+        }
+        
+        const responseData = await res.json();
+        console.log(responseData)
+        return responseData;
+    } catch (err) {
+        return thunkAPI.rejectWithValue(err.message || "An error occurred");
+    }
+});
+
+
+
 const initialState = {
     isLoading : true,
     classes : null,
@@ -43,6 +72,20 @@ const tutorSlice = createSlice({
             state.isLoading = false,
             state.error = true
         })
+
+        builder.addCase(createClasses.pending, (state, action) =>{
+            state.isLoading = true
+        })
+        builder.addCase(createClasses.fulfilled, (state, action) =>{
+            state.isLoading = false,
+            state.classes = action.payload
+            state.status = 200
+        })
+        builder.addCase(createClasses.rejected, (state, action) =>{
+            state.isLoading = false,
+            state.error = true
+        })
+
     }
 })
 

@@ -1,8 +1,22 @@
 import React from 'react'
 import { HomepageStyle } from './common.style'
 import { GlobalStyle } from './common.style'
-import Navbar from '../../molecules/Navbar'
+import Navbar from '../../molecules/Navbar';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 function Homepage() {
+  const navigate = useNavigate();
+  const token = useSelector((state) => state.user.userToken);
+  const handleNavigation = (e, path) => {
+    console.log(token);
+
+    if (!token) {
+      e.preventDefault();
+      navigate("/login");
+    } else {
+      navigate(path);
+    }
+  };
   return (
     <>
     <GlobalStyle />
@@ -14,7 +28,7 @@ function Homepage() {
             <h1>Transform Your Teaching Experience</h1>
             <p>Elevate your online classes with real-time interaction, AI-powered insights, and seamless collaboration tools. Join the future of education today.</p>
             <div className="cta-buttons">
-              <a href="classroom.html" className="cta-primary">Create Your Class</a>
+              <a onClick={(e) => handleNavigation(e, "/dashboard")} className="cta-primary">Create Your Class</a>
               <a href="#features" className="cta-secondary">Learn More</a>
             </div>
           </div>
