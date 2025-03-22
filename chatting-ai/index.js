@@ -20,7 +20,7 @@ app.use(express.json());
 // CORS middleware
 app.use(
     cors({
-        origin: 'http://localhost:5174',
+        origin: 'http://localhost:5173',
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,
@@ -30,7 +30,7 @@ app.use(
 // Socket.io initialization
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5174",
+        origin: "http://localhost:5173",
         methods: ["GET", "POST"],
         credentials: true
     }
