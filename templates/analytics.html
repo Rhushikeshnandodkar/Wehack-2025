@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduVerse - Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fe;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            height: 100vh;
+            padding: 2rem 1rem;
+            position: fixed;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            color: #6366f1;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            color: #4b5563;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #f3f4f6;
+            color: #6366f1;
+        }
+
+        .nav-item.active {
+            background: #ede9fe;
+            color: #6366f1;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+            width: calc(100% - 250px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .date-filter {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background: white;
+            color: #4b5563;
+            cursor: pointer;
+        }
+
+        .filter-btn.active {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        .metrics-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .metric-card {
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+
+        .metric-title {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            color: #111827;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .metric-change {
+            color: #059669;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <h1 class="logo">EduVerse</h1>
+        <a href="index.html" class="nav-item">Dashboard</a>
+        <a href="classes.html" class="nav-item">My Classes</a>
+        <a href="students.html" class="nav-item">Students</a>
+        <a href="analytics.html" class="nav-item active">Analytics</a>
+        <a href="#" class="nav-item">Resources</a>
+        <a href="#" class="nav-item">Settings</a>
+    </nav>
+
+    <main class="main-content">
+        <div class="header">
+            <h1>Analytics Overview</h1>
+            <div class="date-filter">
+                <button class="filter-btn">Week</button>
+                <button class="filter-btn active">Month</button>
+                <button class="filter-btn">Quarter</button>
+                <button class="filter-btn">Year</button>
+            </div>
+        </div>
+
+        <div class="metrics-container">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Average Class Size</div>
+                    <div class="metric-value">28</div>
+                    <div class="metric-change">↑ 12% vs last month</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Student Retention</div>
+                    <div class="metric-value">94%</div>
+                    <div class="metric-change">↑ 5% vs last month</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Average Score</div>
+                    <div class="metric-value">88%</div>
+                    <div class="metric-change">↑ 3% vs last month</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Teaching Hours</div>
+                    <div class="metric-value">86h</div>
+                    <div class="metric-change">↑ 8% vs last month</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-grid">
+            <div class="chart-container">
+                <h2 class="chart-title">Student Performance Trends</h2>
+                <canvas id="performanceChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2 class="chart-title">Class Attendance</h2>
+                <canvas id="attendanceChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2 class="chart-title">Student Satisfaction</h2>
+                <canvas id="satisfactionChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2 class="chart-title">Teaching Hours Distribution</h2>
+                <canvas id="hoursChart"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Performance Chart
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(performanceCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Average Score',
+                    data: [82, 85, 84, 87, 88, 90],
+                    borderColor: '#6366f1',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 70,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // Attendance Chart
+        const attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
+        new Chart(attendanceCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                datasets: [{
+                    label: 'Attendance Rate',
+                    data: [95, 88, 92, 85, 90],
+                    backgroundColor: '#8b5cf6'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // Satisfaction Chart
+        const satisfactionCtx = document.getElementById('satisfactionChart').getContext('2d');
+        new Chart(satisfactionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Very Satisfied', 'Satisfied', 'Neutral', 'Unsatisfied'],
+                datasets: [{
+                    data: [45, 30, 20, 5],
+                    backgroundColor: ['#6366f1', '#8b5cf6', '#d946ef', '#ec4899']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Hours Chart
+        const hoursCtx = document.getElementById('hoursChart').getContext('2d');
+        new Chart(hoursCtx, {
+            type: 'radar',
+            data: {
+                labels: ['ML', 'DSA', 'Web Dev', 'AI', 'Database'],
+                datasets: [{
+                    label: 'Hours per Subject',
+                    data: [25, 20, 15, 18, 12],
+                    backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                    borderColor: '#6366f1',
+                    pointBackgroundColor: '#6366f1'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

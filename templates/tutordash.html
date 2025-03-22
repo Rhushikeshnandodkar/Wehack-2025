@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduVerse - Tutor Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fe;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            height: 100vh;
+            padding: 2rem 1rem;
+            position: fixed;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            color: #6366f1;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            color: #4b5563;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #f3f4f6;
+            color: #6366f1;
+        }
+
+        .nav-item.active {
+            background: #ede9fe;
+            color: #6366f1;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+            width: calc(100% - 250px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .create-class-btn {
+            background: #6366f1;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .create-class-btn:hover {
+            background: #4f46e5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stat-title {
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            color: #6366f1;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        .classes-list {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .class-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .class-info h3 {
+            color: #111827;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .class-meta {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .class-status {
+            background: #ecfdf5;
+            color: #059669;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <h1 class="logo">EduVerse</h1>
+        <a href="#" class="nav-item active">Dashboard</a>
+        <a href="#" class="nav-item">My Classes</a>
+        <a href="#" class="nav-item">Schedule</a>
+        <a href="#" class="nav-item">Students</a>
+        <a href="#" class="nav-item">Resources</a>
+        <a href="#" class="nav-item">Analytics</a>
+        <a href="#" class="nav-item">Settings</a>
+    </nav>
+
+    <main class="main-content">
+        <div class="header">
+            <h1>Welcome back, Professor Smith</h1>
+            <button class="create-class-btn">Create New Class</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-title">Total Classes</div>
+                <div class="stat-value">24</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Active Students</div>
+                <div class="stat-value">156</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Average Rating</div>
+                <div class="stat-value">4.8</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Hours Taught</div>
+                <div class="stat-value">342</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h2 class="chart-title">Student Engagement</h2>
+                <canvas id="engagementChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2 class="chart-title">Class Distribution</h2>
+                <canvas id="distributionChart"></canvas>
+            </div>
+        </div>
+
+        <div class="classes-list">
+            <h2 class="chart-title">Recent Classes</h2>
+            <div class="class-item">
+                <div class="class-info">
+                    <h3>Advanced Machine Learning</h3>
+                    <div class="class-meta">Yesterday • 28 students</div>
+                </div>
+                <span class="class-status">Completed</span>
+            </div>
+            <div class="class-item">
+                <div class="class-info">
+                    <h3>Data Structures & Algorithms</h3>
+                    <div class="class-meta">2 days ago • 32 students</div>
+                </div>
+                <span class="class-status">Completed</span>
+            </div>
+            <div class="class-item">
+                <div class="class-info">
+                    <h3>Web Development Fundamentals</h3>
+                    <div class="class-meta">3 days ago • 25 students</div>
+                </div>
+                <span class="class-status">Completed</span>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Student Engagement Chart
+        const engagementCtx = document.getElementById('engagementChart').getContext('2d');
+        new Chart(engagementCtx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+                datasets: [{
+                    label: 'Student Engagement',
+                    data: [85, 88, 92, 89, 94, 96],
+                    borderColor: '#6366f1',
+                    tension: 0.4,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // Class Distribution Chart
+        const distributionCtx = document.getElementById('distributionChart').getContext('2d');
+        new Chart(distributionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Programming', 'Data Science', 'Web Dev', 'AI/ML'],
+                datasets: [{
+                    data: [30, 25, 25, 20],
+                    backgroundColor: ['#6366f1', '#8b5cf6', '#d946ef', '#ec4899']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EduVerse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #6366F1;
+            --primary-light: #818CF8;
+            --secondary: #A78BFA;
+            --background: #F8FAFC;
+            --text: #1E293B;
+            --text-light: #64748B;
+            --white: #FFFFFF;
+            --glass: rgba(255, 255, 255, 0.7);
+            --success: #34D399;
+            --warning: #FBBF24;
+        }
+
+        body {
+            background: linear-gradient(135deg, #EEF2FF 0%, #F8FAFC 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .navbar {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .trend {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .trend.up {
+            color: var(--success);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .panel {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .panel-header h2 {
+            font-size: 1.25rem;
+            color: var(--text);
+        }
+
+        .question-card {
+            background: var(--white);
+            padding: 1.25rem;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .question-card:hover {
+            transform: translateX(5px);
+        }
+
+        .relevance {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: var(--white);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            transform: translateX(5px);
+        }
+
+        .rank {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .student-info {
+            flex-grow: 1;
+        }
+
+        .student-name {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .contribution {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .points {
+            font-weight: 600;
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart {
+            width: 100%;
+            height: 300px;
+            margin-top: 2rem;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 16px;
+            display: flex;
+            align-items: flex-end;
+            padding: 1rem;
+            gap: 1rem;
+        }
+
+        .bar {
+            flex-grow: 1;
+            background: linear-gradient(to top, var(--primary), var(--primary-light));
+            border-radius: 8px 8px 0 0;
+            transition: height 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--success);
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+
+        .live-indicator::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">EduVerse</div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Active Students</h3>
+                <div class="value">42</div>
+                <div class="trend up">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17l9-9"></path>
+                        <path d="M7 8h9v9"></path>
+                    </svg>
+                    +12% this week
+                </div>
+            </div>
+            <div class="stat-card">
+                <h3>Questions Asked</h3>
+                <div class="value">156</div>
+                <div class="trend up">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17l9-9"></path>
+                        <path d="M7 8h9v9"></path>
+                    </svg>
+                    +24% this week
+                </div>
+            </div>
+            <div class="stat-card">
+                <h3>Average Engagement</h3>
+                <div class="value">87%</div>
+                <div class="trend up">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17l9-9"></path>
+                        <path d="M7 8h9v9"></path>
+                    </svg>
+                    +5% this week
+                </div>
+            </div>
+            <div class="stat-card">
+                <h3>Poll Participation</h3>
+                <div class="value">92%</div>
+                <div class="trend up">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17l9-9"></path>
+                        <path d="M7 8h9v9"></path>
+                    </svg>
+                    +8% this week
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Most Relevant Questions</h2>
+                    <div class="live-indicator">Live Analysis</div>
+                </div>
+                <div class="questions-list">
+                    <div class="question-card">
+                        <div class="relevance">98% Relevance</div>
+                        <p>Can you explain the concept of neural networks in machine learning and how they relate to deep learning architectures?</p>
+                    </div>
+                    <div class="question-card">
+                        <div class="relevance">95% Relevance</div>
+                        <p>What's the difference between supervised and unsupervised learning? When should we use each approach?</p>
+                    </div>
+                    <div class="question-card">
+                        <div class="relevance">92% Relevance</div>
+                        <p>How does backpropagation work in deep learning, and why is it crucial for training neural networks?</p>
+                    </div>
+                </div>
+                <div class="chart">
+                    <div class="bar" style="height: 80%"></div>
+                    <div class="bar" style="height: 65%"></div>
+                    <div class="bar" style="height: 90%"></div>
+                    <div class="bar" style="height: 45%"></div>
+                    <div class="bar" style="height: 70%"></div>
+                    <div class="bar" style="height: 85%"></div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Student Leaderboard</h2>
+                </div>
+                <div class="leaderboard-list">
+                    <div class="leaderboard-item">
+                        <div class="rank">1</div>
+                        <div class="student-info">
+                            <div class="student-name">Sarah Johnson</div>
+                            <div class="contribution">15 contributions</div>
+                        </div>
+                        <div class="points">250</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank">2</div>
+                        <div class="student-info">
+                            <div class="student-name">Michael Chen</div>
+                            <div class="contribution">12 contributions</div>
+                        </div>
+                        <div class="points">220</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank">3</div>
+                        <div class="student-info">
+                            <div class="student-name">Emma Wilson</div>
+                            <div class="contribution">10 contributions</div>
+                        </div>
+                        <div class="points">180</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank">4</div>
+                        <div class="student-info">
+                            <div class="student-name">James Anderson</div>
+                            <div class="contribution">8 contributions</div>
+                        </div>
+                        <div class="points">150</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
