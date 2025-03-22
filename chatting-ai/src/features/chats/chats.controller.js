@@ -1,11 +1,13 @@
 import { tutorModel } from "../tutor/tutor.schema.js";
 import { lstm } from "../../utils/lstm.js";
 import { MessageModel } from "./chats.schema.js";
+import { cosineSimilarity } from "../../utils/cosineSimilarity.js";
 
 
 export const getChats = async (req, res) => {
     try {
         const { roomid } = req.params;
+
         const room = await tutorModel.findOne({ roomID: roomid }).populate("messages");
         if (!room) {
             return res.status(404).json({ error: "Room not found" });
@@ -16,6 +18,41 @@ export const getChats = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+export const getChatCosineScore = async (req, res) => {
+    try {
+        const { roomid } = req.params;
+
+        // const content = await 
+
+        const room = await tutorModel.findOne({ roomID: roomid });
+        if (!room) {
+            return res.status(404).json({ error: "Room not found" });
+        }
+
+        const content = room.parsedContent;
+
+        const messagesData = await tutorModel.findOne({ roomID: roomid }).populate("messages");
+        if (!messagesData || !messagesData.messages) {
+            return res.status(404).json({ error: "Messages not found" });
+        }
+
+        const filterNotSpamMessages = messagesData.messages.filter((message) => message.prediction !== "Spam");
+        // console.log("filterNotSpamMessages", filterNotSpamMessages);
+
+        const notSpamMessages = filterNotSpamMessages.map((message) => message.comment);
+        // console.log("notSpamMessages", notSpamMessages);
+
+        const result = await cosineSimilarity(content, notSpamMessages);
+        // console.log("result", result.results);
+
+
+        // console.log("room", room);
+        res.status(200).json(result.results);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 
 export const addMessage = async (req, res) => {
     try {
