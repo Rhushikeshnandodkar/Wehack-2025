@@ -19,6 +19,25 @@ export const fetchClasses = createAsyncThunk("classes/fetchall", async(data, thu
     }
 });
 
+export const fetchRelatedMessage = createAsyncThunk("fetch-cosines", async(roomId, thunkAPI) =>{
+    try{
+        console.log(roomId);
+        
+        const res = await fetch(`${url}/api/chats/cosine/${roomId}`, {
+            method : "GET",
+            headers : {
+                "Content-Type" : "application/json",
+                Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+                Accept: "application/json",               
+            }
+        })
+        const data = await res.json()
+        return data
+    }catch(err){
+        return thunkAPI.rejectWithValue(err)
+    }
+});
+
 export const createClasses = createAsyncThunk("classes/create", async (data, thunkAPI) => {
     try {
         console.log(data);
@@ -53,7 +72,8 @@ const initialState = {
     singleclass : null,
     error : false,
     status : null,
-    classanalytics : null
+    classanalytics : null,
+    relatedMessage: null,
 }
 
 const tutorSlice = createSlice({
@@ -82,6 +102,19 @@ const tutorSlice = createSlice({
             state.status = 200
         })
         builder.addCase(createClasses.rejected, (state, action) =>{
+            state.isLoading = false,
+            state.error = true
+        })
+
+        builder.addCase(fetchRelatedMessage.pending, (state, action) =>{
+            state.isLoading = true
+        })
+        builder.addCase(fetchRelatedMessage.fulfilled, (state, action) =>{
+            state.isLoading = false,
+            state.relatedMessage = action.payload
+            state.status = 200
+        })
+        builder.addCase(fetchRelatedMessage.rejected, (state, action) =>{
             state.isLoading = false,
             state.error = true
         })

@@ -55,8 +55,9 @@ export const ClassDashboardStyle = styled.div`
 
         .main-content {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 1.5fr 1.5fr;
             gap: 1.5rem;
+
         }
 
         .panel {
@@ -66,22 +67,35 @@ export const ClassDashboardStyle = styled.div`
             padding: 1.5rem;
             /* box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); */
             border: 1px solid rgba(255, 255, 255, 0.2);
+
         }
 
         .panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            text-align: center;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid rgba(99, 102, 241, 0.1);
         }
+            .create-question-btn{
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
 
         .panel-header h2 {
             font-size: 1.25rem;
             color: var(--text);
         }
-
+    .questions-list{
+        overflow-y : auto;
+            height : 400px;
+            width: 100%;
+            overflow-x: hidden;
+            }
         .question-card {
             background: var(--white);
             padding: 1.25rem;

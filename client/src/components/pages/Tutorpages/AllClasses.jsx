@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 function AllClasses() {
   const dispatch = useDispatch();
-  const { isLoading, classes } = useSelector((state) => state.tutor);
+  const { isLoading, classes } = useSelector((state) => (state.tutor)) || [];
   useEffect(() => {
     dispatch(fetchClasses());
   }, []);

@@ -49,13 +49,17 @@ app.use('/api/chats', chatRouter);
 // Start server after connecting to DB
 (async () => {
     try {
-        await connectUsingMongoose();
+        await connectUsingMongoose(); // Wait for DB connection
         console.log("✅ Database connected successfully!");
 
-        server.listen(PORT, '0.0.0.0', async () => { // Changed from app.listen to server.listen
+        // Start the server **only after** the database connection is established
+        server.listen(PORT, '0.0.0.0', () => { 
             console.log(`🚀 Server running on http://localhost:${PORT}`);
         });
+
     } catch (error) {
         console.error("❌ Error starting the server:", error);
+        process.exit(1); // Exit the process if startup fails
     }
 })();
+

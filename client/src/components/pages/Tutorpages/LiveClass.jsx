@@ -17,17 +17,22 @@ function LiveClass() {
     const [newMessage, setnewMessage] = useState([])
     const [chatLog, setChatLog] = useState([]);
     const [isConnected, setIsConnected] = useState(false);
+    const [isPoll, setisPoll] = useState(false)
 
     useEffect(() => {
         socket.connect() 
-        if(user){
-        }
+
         socket.emit('join_room', {roomId})
 
         socket.on("room_joined", (data) =>{
             console.log(data)
             setprevMessages(data)
         })
+
+        // socket.on("received_poll", (Data) =>{
+        //     setisPoll(true)
+        //     console.log(Data)
+        // })
 
         socket.on("received_message", (data) =>{
             console.log("data is here ------", data)
@@ -43,8 +48,6 @@ function LiveClass() {
             socket.disconnect();
         };
     }, [user, roomId]);
-
-
 
     const sendMessage = () =>{
         // socket.emit("send_message", {roomid : roomId, sender : user?.name,  chat : message})
@@ -68,6 +71,8 @@ function LiveClass() {
                             
         <div className="live-container">
         <div className="main-content">
+
+        {isPoll ? <>
             <div className="poll-container">
                 <div className="question-content">
                     <h2>Q. What is maths?</h2>
@@ -80,6 +85,10 @@ function LiveClass() {
                     <li>D</li>
                 </ul>
             </div>
+        </> : <></>}
+           
+
+
             <div className="video-controls">
             <button className="control-btn">
                 <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>

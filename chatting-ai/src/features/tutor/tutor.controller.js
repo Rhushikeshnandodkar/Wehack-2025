@@ -72,11 +72,11 @@ export const createRoom = async (req, res, next) => {
             }
         }
 
-        // console.log("Extracted Content:", passedContent);
-        // const response = await pdfExtractor(passedContent);
-        // console.log("Response: ", response);
-        // const modelContent = response.class_summary.content;
-        // console.log("Model Content:", modelContent);
+        console.log("Extracted Content:", passedContent);
+        const response = await pdfExtractor(passedContent);
+        console.log("Response: ", response);
+        const modelContent = response.class_summary.content;
+        console.log("Model Content:", modelContent);
 
         const data = {
             roomID,
@@ -87,7 +87,7 @@ export const createRoom = async (req, res, next) => {
             endDate,
             duration,
             authId: userId,
-            parsedContent: "content is here" // ✅ Store extracted text
+            parsedContent: modelContent// ✅ Store extracted text
         };
 
         console.log(data)

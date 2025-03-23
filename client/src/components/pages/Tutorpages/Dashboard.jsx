@@ -3,7 +3,10 @@ import Sidebar from '../../molecules/Sidebar'
 import { DashboardStyle } from './tutor.style'
 import { GlobalStyle } from '../commonpages/common.style'
 import Navbar from '../../molecules/Navbar'
+import { useDispatch, useSelector } from 'react-redux'
+
 function Dashboard() {
+    const name = useSelector((state) => state.user.user.name);
   return (
     <>
     <GlobalStyle/>
@@ -12,7 +15,7 @@ function Dashboard() {
     <DashboardStyle>
             <main className="main-content">
         <div className="header">
-            <h1>Welcome back, Professor Smith</h1>
+            <h1>Welcome back, {name}</h1>
             <button className="create-class-btn">Create New Class</button>
         </div>
         <div className="stats-grid">
